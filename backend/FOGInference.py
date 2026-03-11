@@ -103,7 +103,7 @@ def process_new_reading(readings):
         temp= reading.temperature
         humidity= reading.humidity
         co2= reading.co2_ppm
-        
+
         buffer.append({
             'field3': temp,
             'field4': humidity,
@@ -141,10 +141,36 @@ def process_new_reading(readings):
     risk_15  = future_risk(P_A, fault_probs, 3)
     risk_30  = future_risk(P_A, fault_probs, 6)
 
+    if P_A < 0.2:
+        alert = "GREEN"
+    elif P_A < 0.5:
+        alert = "YELLOW"
+    else:
+        alert = "RED"
+
+    last = buffer[-1]
+
     return {
-        "score": score,
-        "P_A": P_A,
-        "Risk_10min": risk_10,
-        "Risk_15min": risk_15,
-        "Risk_30min": risk_30
+        # Sensor values (for display cards + log table)
+        "temp":     round(last['field3'], 2),
+        "humidity": round(last['field4'], 2),
+        "eco2":     round(last['field5'], 2),
+        "dust":     round(last['field7'], 2),
+
+        # Model outputs
+        "score":      float(score),
+        "P_A":        float(P_A),
+        "Risk_10min": float(risk_10),
+        "Risk_15min": float(risk_15),
+        "Risk_30min": float(risk_30),
+
+        # Fault probabilities
+        "P_Thermal": float(fault_probs[0]),
+        "P_CO2":     float(fault_probs[1]),
+        "P_Dust":    float(fault_probs[2]),
+        "P_Sensor":  float(fault_probs[3]),
+
+        # Alert + timestamp
+        "alert":     alert,
+        "timestamp": pd.Timestamp.now().isoformat(),
     }

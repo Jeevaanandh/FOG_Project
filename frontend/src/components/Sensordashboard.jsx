@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
-const WS_URL = "ws://YOUR_ESP32_IP:81"; // ← replace with your ESP32 WebSocket IP
+const WS_URL = "ws://localhost:8000/ws"; // ← replace with your ESP32 WebSocket IP
 const MAX_HISTORY = 40;
 
 const ALERT_CONFIG = {
